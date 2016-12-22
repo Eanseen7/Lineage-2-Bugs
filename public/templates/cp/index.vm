@@ -1,0 +1,38 @@
+<div class="ui container">
+    <div class="ui segments">
+        <div class="ui segment">
+            <div class="ui large buttons">
+                <a class="ui button red" href="/enter/logout">Выход</a>
+            </div>
+        </div>
+        <div class="ui segment">
+            <table class="ui sortable celled table">
+                <thead>
+                <tr>
+                    <th class="">Project</th>
+                    <th class="">Type</th>
+                    <th class="">Name</th>
+                    <th class="">Count</th>
+                    <th class=""></th>
+                </tr>
+                </thead>
+                <tbody>
+				#foreach($bugTag in $bugTags)
+				#if($bugService.getCount($bugTag.id) > 0)
+                <tr>
+                    <td>$projects.get($bugTag.projectId).name</td>
+                    <td>$types.get($bugTag.typeId).name</td>
+                    <td>$bugTag.name</td>
+                    <td>$bugService.getCount($bugTag.id)</td>
+                    <td><a href="/admin/viewByBugTag/$bugTag.id">Подробнее</a></td>
+                </tr>
+				#end
+				#end
+                </tbody>
+            </table>
+            <script>
+                $('table').tablesort();
+            </script>
+        </div>
+    </div>
+</div>

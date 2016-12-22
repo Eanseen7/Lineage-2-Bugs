@@ -1,0 +1,232 @@
+<div class="ui container">
+    <div class="ui segments">
+        <div class="ui segment">
+            <div class="ui fluid selection dropdown select">
+                <input type="hidden" name="projectId" onchange="setProject()" id="selectProject">
+                <i class="dropdown icon"></i>
+                <div class="default text">Выберите хроники</div>
+                <div class="menu">
+					#foreach($project in $projects)
+                        <div class="item" data-value="$project.id" data-text="$project.name">$project.name</div>
+					#end
+                </div>
+            </div>
+        </div>
+        <div class="ui segment">
+            <div class="ui fluid selection dropdown select">
+                <input type="hidden" name="typeId" onchange="setType()" id="selectType">
+                <i class="dropdown icon"></i>
+                <div class="default text">Тип проблемы</div>
+                <div class="menu">
+					#foreach($type in $types)
+                        <div class="item" data-value="$type.id" data-text="$type.name">$type.name</div>
+					#end
+                </div>
+            </div>
+        </div>
+
+		#foreach($type in $types)
+            <div class="ui segment" style="display: none;" id="type$type.id">
+                <form class="ui form" id="form$type.id">
+                    <input type="hidden" name="projectId">
+                    <input type="hidden" name="typeId">
+                    <div class="field">
+							#if($type.id == 1)
+							    <label>Название Умения (Начните вводить название и выберите его из списка)</label>
+								<div class="ui fluid search selection dropdown skillName">
+							#elseif($type.id == 2)
+							    <label>Название Квеста (Начните вводить название и выберите его из списка)</label>
+								<div class="ui fluid selection dropdown search questName">
+							#elseif($type.id == 3)
+							    <label>Название Временной зоны (Начните вводить название и выберите его из списка)</label>
+								<div class="ui fluid selection dropdown search instanceName">
+							#elseif($type.id == 4)
+							    <label>Название Монстра или Нпц (Начните вводить название и выберите его из списка)</label>
+								<div class="ui fluid selection dropdown search monsterName">
+							#elseif($type.id == 5)
+                                <label>Название Предмета (Начните вводить название и выберите его из списка)</label>
+                            	<div class="ui fluid selection dropdown search itemName">
+							#elseif($type.id == 100)
+                                <label>Пару ключевых слов о проблеме (Если в списке есть что-то похожее то выберите его)</label>
+                            	<div class="ui fluid selection dropdown search otherName">
+							#end
+									<input type="hidden" name="name">
+									<i class="dropdown icon"></i>
+									<input type="text" class="search" tabindex="0">
+									<div class="text"></div>
+                            		<div class="menu transition hidden" tabindex="-1"></div>
+                           		</div>
+                    </div>
+                    <div class="field fluid">
+                        <label>Как работает сейчас ?</label>
+                        <textarea name="oldWork" style="width: 700px; height: 200px;" id="oldWork$type.id"></textarea>
+                    </div>
+                    <div class="field">
+                        <label>Как должно работать ?</label>
+                        <textarea name="newWork" style="width: 700px; height: 200px;" id="newWork$type.id"></textarea>
+                    </div>
+                    <div class="field">
+                        <label>Офф. источники (ссылки, картинки, видео и прочее)</label>
+                        <textarea name="other" style="width: 700px; height: 200px;" id="other$type.id"></textarea>
+                    </div>
+                    <div class="inline field">
+                        <div class="ui toggle checkbox">
+                            <input type="checkbox" tabindex="0" class="hidden" name="rulles">
+                            <label>Я понимаю, что если я указал(а) недостаточно информации то эту ошибку никогда не исправят</label>
+                        </div>
+                    </div>
+                    <button class="medium ui button green" onclick="sendForm('#form$type.id')">Отправить</button>
+                </form>
+            </div>
+		#end
+    </div>
+</div>
+
+<div class="ui modal small typeSuccess">
+    <i class="close icon"></i>
+    <div class="header">
+        Уведомление
+    </div>
+    <div class="image content">
+        <div class="description">
+            Ваш запрос успешно отправлен, ожидайте исправления в ближайших обновлениях
+        </div>
+    </div>
+</div>
+<div class="ui modal small typeError">
+    <i class="close icon"></i>
+    <div class="header">
+        Ошибка
+    </div>
+    <div class="image content">
+        <div class="description">
+            Заполните все поля
+        </div>
+    </div>
+</div>
+<div class="ui modal small typeSpam">
+    <i class="close icon"></i>
+    <div class="header">
+        Ошибка
+    </div>
+    <div class="image content">
+        <div class="description">
+            Отправлять сообщения можно 1 раз в 60 секунд
+        </div>
+    </div>
+</div>
+
+<script>
+    $('.select').dropdown();
+    $('.skillName')
+            .dropdown({
+                apiSettings: {
+                    url: '/api/getNames/Skill/{query}'
+                }
+            })
+    ;
+    $('.questName')
+            .dropdown({
+                apiSettings: {
+                    url: '/api/getNames/Quest/{query}'
+                }
+            })
+    ;
+    $('.instanceName')
+            .dropdown({
+                apiSettings: {
+                    url: '/api/getNames/Instance/{query}'
+                }
+            })
+    ;
+    $('.monsterName')
+            .dropdown({
+                apiSettings: {
+                    url: '/api/getNames/Monster/{query}'
+                }
+            })
+    ;
+    $('.itemName')
+            .dropdown({
+                apiSettings: {
+                    url: '/api/getNames/Item/{query}'
+                }
+            })
+    ;
+    $('.otherName')
+            .dropdown({
+                apiSettings: {
+                    url: '/api/getNames/Other/{query}',
+					saveRemoteData: false
+                }
+            })
+    ;
+    $('.ui.checkbox')
+            .checkbox()
+    ;
+</script>
+<script>
+	function setProject() {
+		var val = document.getElementById('selectProject').value;
+        var elements = document.getElementsByName("projectId");
+        for (var i = 0; i < elements.length; i++) {
+			elements[i].value = val;
+        }
+    }
+    function setType() {
+        var val = document.getElementById('selectType').value;
+
+        var elements = document.getElementsByName("typeId");
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].value = val;
+        }
+
+        for (var i = 1; i <= 100; i++) {
+            var element = document.getElementById('type' + i);
+            if (element != null) {
+                element.style.display = "none";
+            }
+        }
+
+        document.getElementById('type' + val).style.display = "block";
+        return false;
+    }
+</script>
+<script>
+	function sendForm(form) {
+		$(form).submit(function(e) {
+            $('textarea').each(function () {
+                var id_nic = $(this).attr('id');
+                var nic = nicEditors.findEditor(id_nic);
+                if (nic) nic.saveContent();
+            });
+            var url = "/api/bugAdd";
+            var data = $(this).serialize();
+            $.ajax({
+                url: url,
+                data: data,
+                type: "POST"
+            }).done(function (data) {
+				switch (data){
+					case 'success':
+                        $('.typeSuccess')
+                                .modal('show')
+                        ;
+                        setTimeout("location.href = '/bugs/new';", 2000);
+						break;
+					case 'error':
+                        $('.typeError')
+                                .modal('show')
+                        ;
+						break;
+                    case 'spam':
+                        $('.typeSpam')
+                                .modal('show')
+                        ;
+                        break;
+				}
+            });
+			return false;
+        });
+    }
+</script>

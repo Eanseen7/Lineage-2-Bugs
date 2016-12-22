@@ -1,0 +1,42 @@
+<div class="ui container">
+    <div class="ui segments">
+        <div class="ui segment">
+            <table class="ui celled table">
+                <thead>
+                <tr>
+                    <th>$projects.get($bugTag.projectId).name</th>
+                    <th>$types.get($bugTag.typeId).name</th>
+                    <th>$bugTag.name</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+		#foreach($bug in $bugService.findByBugTagId($bugTag.id))
+            <div class="ui segments" id="bug$bug.id">
+                <div class="ui green segment" style="word-wrap: break-word;">
+                    <strong>Как работает сейчас ?</strong>
+                    <p>$bug.oldWork</p>
+                </div>
+                <div class="ui green segment" style="word-wrap: break-word;">
+                    <strong>Как должно работать ?</strong>
+                    <p>$bug.newWork</p>
+                </div>
+                <div class="ui green segment" style="word-wrap: break-word;">
+                    <strong>Офф. источники</strong>
+                    <p>$bug.other</p>
+                </div>
+                <div class="ui green segment">
+                    <button class="ui button red" onclick="removeBug($bug.id);">Удалить</button>
+                </div>
+            </div>
+		#end
+    </div>
+    <br>
+</div>
+
+<script>
+	function removeBug(bugId) {
+        $('#bug'+bugId).remove();
+        $.get("/admin/api/deleteBug/" + bugId);
+    }
+</script>

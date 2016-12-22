@@ -1,0 +1,7 @@
+<div class="ui inverted menu">
+    <div class="ui container">
+        <a href="/" class="item">Главная</a>
+        <a href="/bugs/new" class="item">Подать заявку</a>
+        <a href="/enter" class="item">Панель управления</a>
+    </div>
+</div>

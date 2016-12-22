@@ -1,0 +1,11 @@
+<div class="ui container">
+    <div class="ui segments">
+        <div class="ui segment">
+            <div class="ui large buttons">
+                <a class="ui button green" href="/enter/auth">Авторизация</a>
+                <div class="or"></div>
+                <a class="ui button blue" href="/enter/reg">Регистрация</a>
+            </div>
+        </div>
+    </div>
+</div>

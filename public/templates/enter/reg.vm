@@ -1,0 +1,51 @@
+<script src='https://www.google.com/recaptcha/api.js'></script>
+
+<div class="ui container">
+    <div class="ui segments">
+        <div class="ui segment">
+            <div class="ui large buttons">
+                <a class="ui button green" href="/enter/auth">Авторизация</a>
+                <div class="or"></div>
+                <a class="ui button blue" href="/enter/reg">Регистрация</a>
+            </div>
+        </div>
+        <div class="ui segment">
+            <form class="ui form" action="#springUrl("/enter/reg")" method="POST">
+				<div class="field">
+                    <label>Email</label>
+					#springBind("mAccount.username")
+					#springFormInput("mAccount.username" 'placeholder="E-mail"')
+					#foreach($e in $status.errorMessages)
+						<div class="ui pointing red basic label">${e}</div>
+					#end
+                </div>
+                <div class="field">
+                    <label>Пароль</label>
+					#springBind("mAccount.password")
+					#springFormPasswordInput("mAccount.password" 'placeholder="Пароль"')
+					#foreach($e in $status.errorMessages)
+                        <div class="ui pointing red basic label">${e}</div>
+					#end
+                </div>
+                <div class="field">
+                    <label>Повторите пароль</label>
+					#springBind("mAccount.repeatPassword")
+					#springFormPasswordInput("mAccount.repeatPassword" 'placeholder="Повторите пароль"')
+					#foreach($e in $status.errorMessages)
+                        <div class="ui pointing red basic label">${e}</div>
+					#end
+				</div>
+
+                <div class="field">
+					#springBind("mAccount.recaptchaResponse")
+					<div class="g-recaptcha" data-sitekey="$recaptchaSiteKey"></div>
+					#foreach($e in $status.errorMessages)
+                        <div class="ui pointing red basic label">Проверка не пройдена</div>
+					#end
+                </div>
+
+                <button class="medium ui button blue" type="submit">Отправить</button>
+            </form>
+        </div>
+    </div>
+</div>
